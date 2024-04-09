@@ -1,0 +1,10 @@
+version: '2'
+services:
+  Rail-Vista-Main:
+    build: .
+    privileged: true
+    ports:
+      - "8000:8000"
+    devices:
+      - "/dev:/dev"
+    restart: always
