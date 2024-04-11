@@ -1,27 +1,9 @@
-# base-image for python on any machine using a template variable,
-# see more about dockerfile templates here: https://www.balena.io/docs/learn/develop/dockerfile/
+# Base image for Python on any machine using a template variable,
+# see more about Dockerfile templates here: https://www.balena.io/docs/learn/develop/dockerfile/
 FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3-stretch-run
 
-# use `install_packages` if you need to install dependencies,
-# for instance if you need git, just uncomment the line below.
-# RUN install_packages git
-
-# Set our working directory
-WORKDIR /usr/src/app
-
-# Copy requirements.txt first for better cache on later pushes
-COPY requirements.txt requirements.txt
-
-# pip install python deps from requirements.txt on the resin.io build server
-RUN pip install -r requirements.txt
-
-
-#raspberry pi camera
-
-FROM balenalib/raspberry-pi-python:3.7-buster
-
 # Install system packages required for compiling native extensions
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN install_packages \
     build-essential \
     libjpeg-dev \
     git \
@@ -29,35 +11,31 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libjasper-dev \
     libqtgui4 \
     libqt4-test \
-    python3-dev \
-    && rm -rf /var/lib/apt/lists/*
+    python3-dev
 
 # Upgrade pip, setuptools, and wheel to ensure we have the latest versions
 RUN python3 -m pip install --upgrade pip setuptools wheel
 
-# Clone and install picamera2 if necessary as before
-# ... your picamera2 installation steps here ...
+# Clone and install picamera2 from GitHub
+RUN git clone https://github.com/raspberrypi/picamera2.git /usr/src/picamera2 \
+    && cd /usr/src/picamera2 \
+    && python3 setup.py install
 
-# Now proceed to install Python dependencies
+# Now proceed to install Python dependencies from requirements.txt
 COPY requirements.txt /usr/src/app/
 RUN pip install --no-cache-dir -r /usr/src/app/requirements.txt
 
 # Copy the rest of your application
-COPY . /usr/src/app
+COPY . /usr/src/app/
 
-CMD ["python3", "/usr/src/app/your_script.py"]
-
-#End of raspberry pi camera
-
-
-
-
-
-# This will copy all files in our root to the working  directory in the container
-COPY . ./
-
-# Enable udevd so that plugged dynamic hardware devices show up in our container.
+# Enable udevd so that plugged dynamic hardware devices show up in our container
 ENV UDEV=1
 
-# main.py will run when container starts up on the device
-CMD ["python","-u","src/app.py"]
+# Set the working directory
+WORKDIR /usr/src/app
+
+# Expose the port for streaming
+EXPOSE 8000
+
+# CMD to run your Python application
+CMD ["python3", "-u", "src/app.py"]
