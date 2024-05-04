@@ -38,4 +38,4 @@ WORKDIR /usr/src/app
 EXPOSE 8000
 
 # CMD to run your Python application
-CMD ["python3", "-u", "src/app.py"]
+CMD ["python3", "-u", "src/main.py"]
