@@ -1,25 +1,14 @@
-# Base image for Python on any machine using a template variable,
-# see more about Dockerfile templates here: https://www.balena.io/docs/learn/develop/dockerfile/
-FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3-stretch-run
+FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3.11-bookworm-run
 
-# Install system packages required for compiling native extensions
-RUN install_packages \
-    build-essential \
-    libjpeg-dev \
-    git \
-    libatlas-base-dev \
-    libjasper-dev \
-    libqtgui4 \
-    libqt4-test \
-    python3-dev
+# Ensure pip builde with latest modules
+RUN pip install --upgrade pip setuptools wheel
 
-# Upgrade pip, setuptools, and wheel to ensure we have the latest versions
-RUN python3 -m pip install --upgrade pip setuptools wheel
+# Add Raspberry Pi repo
+RUN curl -sS http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | gpg --dearmor > /etc/apt/trusted.gpg.d/raspberrypi.gpg.key
+RUN echo "deb [signed-by=/etc/apt/trusted.gpg.d/raspberrypi.gpg.key] http://archive.raspberrypi.org/debian/ bookworm main" >> /etc/apt/sources.list.d/raspi.list
 
-# Clone and install picamera2 from GitHub
-RUN git clone https://github.com/raspberrypi/picamera2.git /usr/src/picamera2 \
-    && cd /usr/src/picamera2 \
-    && python3 setup.py install
+# Install the python camera packages
+RUN install_packages python3-libcamera python3-picamera2
 
 # Now proceed to install Python dependencies from requirements.txt
 COPY requirements.txt /usr/src/app/
