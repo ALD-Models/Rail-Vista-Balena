@@ -1,0 +1,18 @@
+# Use a base image suitable for your web server application (e.g., Node.js)
+FROM node:14
+
+# Set the working directory
+WORKDIR /usr/src/app/webserver
+
+# Copy web server-specific files
+COPY server.js ./
+
+COPY index.html ./
+
+COPY favicon.ico ./
+
+# Expose the port on which your web server listens
+EXPOSE 80
+
+# Define the command to start the web server
+CMD ["node", "server.js"]
