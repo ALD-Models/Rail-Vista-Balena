@@ -1,0 +1,17 @@
+version: "2.1"
+
+services:
+  webserver:
+    build: ./webserver
+    ports:
+      - "80:80"
+    restart: always
+    # Add any additional configurations specific to the webserver service
+
+  camera:
+    build: ./camera
+    privileged: true
+    ports:
+      - "9090"
+    restart: always
+    # Add any additional configurations specific to the camera service
