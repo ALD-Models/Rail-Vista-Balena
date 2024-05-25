@@ -1,0 +1,30 @@
+# Use a base image suitable for your camera application
+FROM balenalib/%%BALENA_MACHINE_NAME%%-debian:bullseye
+
+# Install necessary dependencies
+RUN install_packages \
+    libcamera-dev \
+    libcamera-apps-lite \
+    python3 \
+    v4l-utils \
+    ffmpeg
+
+
+# Set the working directory
+WORKDIR /usr/src/app/camera
+
+# Copy camera-specific files and scripts
+COPY stream.sh ./
+
+RUN chmod +x stream.sh
+
+# Expose any required ports
+EXPOSE 9090
+
+# RUN usermod -a -G video root
+
+ENV UDEV=on
+
+# Define the command to start the camera service
+CMD ["./stream.sh"]
+
