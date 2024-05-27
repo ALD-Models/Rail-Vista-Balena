@@ -12,6 +12,6 @@ services:
     build: ./camera
     privileged: true
     ports:
-      - "9090"
+      - "90:90"
     restart: always
     # Add any additional configurations specific to the camera service
