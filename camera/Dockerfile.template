@@ -19,7 +19,7 @@ COPY stream.sh ./
 RUN chmod +x stream.sh
 
 # Expose any required ports
-EXPOSE 9090
+EXPOSE 90
 
 # RUN usermod -a -G video root
 
