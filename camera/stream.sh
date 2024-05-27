@@ -10,7 +10,7 @@ libcamera-hello --list-cameras -n -v
 local_ip=$(hostname -I | awk '{print $1}')
 
 # Define the port
-PORT=9090
+PORT=90
 
 # Log the server listening port and browser address to the console
 echo "Server listening on port ${PORT}"
