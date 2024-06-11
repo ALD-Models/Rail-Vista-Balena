@@ -1,7 +1,7 @@
 name: Rail Vista Testing
 type: sw.application
 description: >-
-  Raspberry Pi Foundation's new camera stack
+
 assets:
   repository:
     type: blob.asset
