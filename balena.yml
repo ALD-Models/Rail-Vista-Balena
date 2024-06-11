@@ -6,7 +6,7 @@ assets:
   repository:
     type: blob.asset
     data:
-      url: ''
+      url: 'https://github.com/ALD-Models/Rail-Vista-Balena'
   logo:
     type: blob.asset
     data:
@@ -23,5 +23,4 @@ data:
     - raspberry-pi2
     - raspberrypi3
     - raspberrypi4-64
-    - fincm3
 version: 0.1.0
